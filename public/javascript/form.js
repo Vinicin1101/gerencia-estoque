@@ -13,7 +13,7 @@ $('document').ready(function () {
             let coca = jsonCoca(prod, num_caixas, nomeForn, dataForn, valor);
 
             $.ajax({
-                url: 'http://localhost:3000/insert',
+                url: 'http://localhost:3000/produtos/insert',
                 type: 'POST',
                 data: coca,
                 success: function (data) {

@@ -84,8 +84,7 @@ router.get('/produtos/list', function (req, res, next) {
     ];
     res.render("list", {
         title: "Lista de produtos",
-        produtos: produtos,
-        nome_produto: 'TEste'
+        produtos: produtos
     });
 })
 
