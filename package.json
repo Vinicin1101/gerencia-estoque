@@ -7,14 +7,15 @@
     "dev": "nodemon ./bin/www"
   },
   "dependencies": {
-    "nodemon": "^2.0",
     "body-parser": "^1.20.0",
     "cookie-parser": "^1.4.4",
     "debug": "^4",
+    "dotenv": "^16.0.0",
     "express": "^4.16.1",
     "hbs": "^4.2.0",
     "http-errors": "^2",
     "mongodb": "^4.5",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "nodemon": "^2.0"
   }
 }

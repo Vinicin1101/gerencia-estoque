@@ -4,15 +4,47 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/styles/main.css" type="text/css">
+    <link rel="stylesheet" href="/styles/list.css" type="text/css">
+
     <title>{{title}}</title>
+
 </head>
 <body>
-    {{title}}
 
-    <ul>
-        {{#each produtos}}
-        <li>{{nome}}</li>
-        {{/each}}
-    </ul>
+    <container class="main">
+        <header>
+            <h1>{{title}}</h1>
+        </header>
+
+        {{!-- Tabela com as informações do produto --}}
+        {{#if produtos}}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Quantidade</th>
+                    <th>Data de fornecimento</th>
+                    <th>Fornecedor</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each produtos}}
+                <tr>
+                    <td>{{prod}}</td>
+                    <td>{{qtd.unidade}}</td>
+                    <td>{{ultima_encomenda.data}}</td>
+                    <td>{{ultima_encomenda.fornecedor}}</td>
+                    <td>{{ultima_encomenda.valor.total}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        {{else}}
+            <p>Nada para exibir</p>
+        {{/if}}
+    </container>
 </body>
 </html>

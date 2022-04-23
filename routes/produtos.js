@@ -1,91 +1,65 @@
+const json = require('body-parser/lib/types/json');
 var express = require('express');
 var router = express.Router();
 
-router.post('/produtos/insert', function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', "*");
-    res.header('Access-Control-Allow-Methods', 'POST');
-    res.header("Access-Control-Allow-Headers", "accept, content-type");
-    res.header("Access-Control-Max-Age", "1728000");
-    res.status(200);
-    res.send(req.body);
-});
+// dotenv
+require("dotenv").config();
+const DB_USER = process.env.DB_USER;
+const DB_PASS = process.env.DB_PASS;
+const DB_NAME = process.env.DB_NAME;
 
-router.get('/produtos/list', function (req, res, next) {
-    var produtos = [
-        {
-            "id": 1,
-            "nome": "Coca-Cola",
-            "qtd": {
-                "caixa": 12,
-                "unidade": 144
-            },
-            "preco": {
-                "unidade": 2.50,
-                "caixa": 5.00
-            },
-            "ultima_encomenda": {
-                "data": "01/01/2018",
-                "fornecedor": "Coca-Cola",
-                "quantidade": {
-                    "caixa": 12,
-                },
-                "valor": {
-                    "total": 60.00,
-                    "caixa": 5.00
-                }
-            }
-        },
-        {
-            "id": 2,
-            "nome": "Fanta",
-            "qtd": {
-                "caixa": 12,
-                "unidade": 144
-            },
-            "preco": {
-                "unidade": 2.50,
-                "caixa": 5.00
-            },
-            "ultima_encomenda": {
-                "data": "01/01/2018",
-                "fornecedor": "Fanta",
-                "quantidade": {
-                    "caixa": 12,
-                },
-                "valor": {
-                    "total": 60.00,
-                    "caixa": 5.00
-                }
-            }
-        },
-        {
-            "id": 3,
-            "nome": "Sprite",
-            "qtd": {
-                "caixa": 12,
-                "unidade": 144
-            },
-            "preco": {
-                "unidade": 2.50,
-                "caixa": 5.00
-            },
-            "ultima_encomenda": {
-                "data": "01/01/2018",
-                "fornecedor": "Sprite",
-                "quantidade": {
-                    "caixa": 12,
-                },
-                "valor": {
-                    "total": 60.00,
-                    "caixa": 5.00
-                }
-            }
-        },
-    ];
-    res.render("list", {
-        title: "Lista de produtos",
-        produtos: produtos
+const PRODCOLLECTION = process.env.PRODCOLLECTION;
+
+// MongoDB
+const { MongoClient, ObjectId } = require("mongodb");
+const DB_URL = `mongodb+srv://${DB_USER}:${DB_PASS}@cluster0.dff1c.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`;
+
+// mongodb connection
+async function connectDB() {
+    const client = await MongoClient.connect(DB_URL);
+    const db = client.db(DB_NAME);
+
+    const prodCollection = db.collection(PRODCOLLECTION);
+
+    // router POST type JSON only
+    router.post('/produtos/insert', async (req, res, next) => {
+
+        // CORS headers
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+
+        const prod = req.body;
+        // insert json data into mongodb
+        prodCollection.insertOne(prod);
+
+        // regex finder
+        const result = await prodCollection.find({ prod: { $regex: prod.prod } }).toArray();
+
+        res.status(200).json(result);
     });
-})
 
+    router.get('/produtos/list', async (req, res, next) => {
+        if (req.query.prod_name) {
+            const prod_name = req.query.prod_name;
+            const result = await prodCollection.find({ prod: { $regex: new RegExp(prod_name, "gi") } }).toArray().then(result => {
+                if (result.length > 0) {
+                    res.status(200).render('list', { title: `Produtos`, produtos: result });
+                } else {
+                    res.status(206).render('list', { title: `Nada encontrado`, produtos: [] });
+                }
+            });
+
+        } else {
+            res.render('list', { title: 'Termo inválido', produtos: [] });
+        }
+    });
+}
+
+connectDB();
 module.exports = router;
+
+// teste
+// TESTE
+// Teste
+// testE

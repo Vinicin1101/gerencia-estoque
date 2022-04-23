@@ -6,4 +6,12 @@ body {
     font-size: 14px;
     color: #333;
     background: #fff;
+
+    margin: 0 auto
+}
+
+container.main {
+    display: block;
+    width: 70%;
+    margin: 0 auto;
 }

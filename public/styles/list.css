@@ -1,0 +1,26 @@
+table {
+    border: 1px solid #000;
+    border-collapse: collapse;
+    width: 80%;
+    margin: 0 auto;
+}
+
+table thead {
+    padding: 10px;
+    border: #fff;
+}
+
+table thead th {
+    padding: 10px;
+    background-color: #000;
+    color: #fff;
+}
+
+table tbody td {
+    text-align: center;
+    padding: 10px;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
